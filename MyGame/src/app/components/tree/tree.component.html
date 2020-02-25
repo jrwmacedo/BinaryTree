@@ -1,0 +1,56 @@
+<ng-template #nodeTemplateRef let-node="node">
+  <li *ngIf="showNode(node)">
+    <div (click)="selectNode(node)" class="user">
+      <div [ngClass]="{'yes': node?.yesNo, 'no': !node?.yesNo, 'highlight': checkHighlight(node)  }">
+        <div *ngIf="node?.yesNo != undefined">
+          {{this.manageYesNo(node?.yesNo)}}
+        </div>
+      </div>
+      <div *ngIf="manageDescription(node)" class="name">
+        {{ node?.description }}
+      </div>
+    </div>
+    <ul *ngIf="node?.children">
+      <ng-template ngFor let-child [ngForOf]="node?.children">
+        <!-- Recursive template. -->
+        <ng-template [ngTemplateOutlet]="nodeTemplateRef" [ngTemplateOutletContext]="{ node: child }">
+        </ng-template>
+
+      </ng-template>
+
+    </ul>
+  </li>
+</ng-template>
+
+<nav class="level">
+  <div class="level-item has-text-centered">
+    <div>
+      <button class="button is-rounded" [class.is-success]="showAllQuestion"
+        (click)="showAllQuestion = !showAllQuestion">Show All
+        Questions</button>
+    </div>
+  </div>
+  <div class="level-item has-text-centered">
+    <div>
+      <h1 class="title">{{this.message}}</h1>
+    </div>
+  </div>
+  <div class="level-item has-text-centered">
+    <div>
+      <button class="button is-rounded" [class.is-success]="highlightChoices"
+        (click)="highlightChoices = !highlightChoices">Highlight my
+        choices</button>
+    </div>
+  </div>
+</nav>
+<div>
+  <div class="tree">
+    <ul>
+      <!-- Initiate -->
+      <ng-template [ngTemplateOutlet]="nodeTemplateRef" [ngTemplateOutletContext]="{ node: questions}">
+      </ng-template>
+    </ul>
+  </div>
+</div>
+<app-modal (messageEvent)='receiveMessage($event)' (playerEvent)='receivePlayer($event)'
+  [showModal]='this.selectedTreeNode.size == 1'></app-modal>

@@ -1,0 +1,25 @@
+<div class="modal" [ngClass]="{'is-active': showModal && !submitted}">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">What is your name ?</p>
+        </header>
+        <form [formGroup]="playerForm" (ngSubmit)="onSubmit()">
+            <section class="modal-card-body">
+                <div class="field">
+                    <div class="control">
+                        <input type="text" formControlName="firstName" class="input"
+                            [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+                        <div *ngIf="submitted && f.username?.errors" class="invalid-feedback">
+                            <div *ngIf="f.firstName.errors.required">First name is required</div>
+                        </div>
+                    </div>
+                    <p class="help">Please inform your first name</p>
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                <button type="submit" [disabled]="!playerForm.valid || this.clicked" class="button is-primary">Submit</button>
+            </footer>
+        </form>
+    </div>
+</div>
