@@ -32,14 +32,12 @@ namespace GameAPI.Data.Handlers
 
         public async Task<IQueryable<PlayerResponse>> Handle(QueryPlayerRequest request, CancellationToken cancellationToken)
         {
-            var questions = await this.mapper.ProjectTo<PlayerResponse>(ctx.Players).ToListAsync();
-            return questions.AsQueryable();
+            return await Task.FromResult(this.mapper.ProjectTo<PlayerResponse>(ctx.Players));
         }
 
         public async Task<IQueryable<PlayerResponse>> Handle(QuerySinglePlayerRequest request, CancellationToken cancellationToken)
         {
-            var player = await this.mapper.ProjectTo<PlayerResponse>(ctx.Players.Include(h => h.PlayerQuestions).Where(v => v.Id == request.key)).ToListAsync();
-            return player.AsQueryable();
+            return await Task.FromResult(this.mapper.ProjectTo<PlayerResponse>(ctx.Players.Include(h => h.PlayerQuestions).Where(v => v.Id == request.key)));
         }
     }
 }

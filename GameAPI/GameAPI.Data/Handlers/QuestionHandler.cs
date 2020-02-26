@@ -40,15 +40,12 @@ namespace GameAPI.Data.Handlers
 
         public async Task<IQueryable<QuestionResponse>> Handle(QueryQuestionRequest request, CancellationToken cancellationToken)
         {
-            var questions = await this.mapper.ProjectTo<QuestionResponse>(ctx.Questions).ToListAsync();
-            return questions.AsQueryable();
-
+            return await Task.FromResult(this.mapper.ProjectTo<QuestionResponse>(ctx.Questions));
         }
 
         public async Task<IQueryable<QuestionResponse>> Handle(QuerySingleQuestionRequest request, CancellationToken cancellationToken)
         {
-            var question = await this.mapper.ProjectTo<QuestionResponse>(ctx.Questions.Include(q => q.Children).ThenInclude(h => h.Children).Where(v => v.Id == request.key)).ToListAsync();
-            return question.AsQueryable();
+            return await Task.FromResult(this.mapper.ProjectTo<QuestionResponse>(ctx.Questions.Include(q => q.Children).ThenInclude(h => h.Children).Where(v => v.Id == request.key)));
         }
     }
 }
